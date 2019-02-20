@@ -66,11 +66,12 @@ class KinAccount:
 
     def get_balance(self):
         """
-        Get the KIN balance of this KinAccount
+        Get the Kin balance of this KinAccount
+
         :return: the kin balance
         :rtype: float
 
-        :raises: KinErrors.AccountNotFoundError if the account does not exist.
+        :raises KinErrors.AccountNotFoundError: if the account does not exist.
         """
         return self._client.get_account_balance(self.keypair.public_address)
 
@@ -79,18 +80,19 @@ class KinAccount:
         Gets this KinAccount's data
 
         :return: account data
-        :rtype: kin.blockchain.horizon_models.AccountData
+        :rtype: :class:`kin.blockchain.horizon_models.AccountData`
 
-        :raises: KinErrors.AccountNotFoundError if the account does not exist.
+        :raises KinErrors.AccountNotFoundError: if the account does not exist.
         """
         return self._client.get_account_data(self.keypair.public_address)
 
     def get_status(self, verbose=False):
         """
         Get the config and status of this KinAccount object
+
         :param bool verbose: Should the channels status be verbose
         :return: The config and status of this KinAccount object
-        :rtype dict
+        :rtype: dict
         """
         account_status = {
             'app_id': self.app_id,
@@ -108,6 +110,7 @@ class KinAccount:
     def get_transaction_history(self, amount=10, descending=True, cursor=None, simple=True):
         """
         Get the transaction history for this kin account
+
         :param int amount: The maximum number of transactions to get
         :param bool descending: The order of the transactions, True will start from the latest one
         :param int cursor: The horizon paging token
@@ -125,8 +128,9 @@ class KinAccount:
     def get_transaction_builder(self, fee):
         """
         Get a transaction builder using this account
+
         :param int fee: The fee that will be used for the transaction
-        :return: kin.Builder
+        :return: :class:`kin.Builder`
         """
         return Builder(self._client.environment.name, self.horizon, fee, self.keypair.secret_seed)
 
@@ -135,7 +139,7 @@ class KinAccount:
 
         :param str address: the address of the account to create.
 
-        :param float|str starting_balance: the starting KIN balance of the account.
+        :param float|str starting_balance: the starting Kin balance of the account.
 
         :param str memo_text: (optional) a text to put into transaction memo, up to MEMO_CAP chars.
 
@@ -144,11 +148,11 @@ class KinAccount:
         :return: the hash of the transaction
         :rtype: str
 
-        :raises: KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
-        :raises: KinErrors.AccountExistsError if the account already exists.
-        :raises: KinErrors.NotValidParamError if the memo is longer than MEMO_CAP characters
-        :raises: KinErrors.NotValidParamError: if the amount is too precise
-        :raises: KinErrors.NotValidParamError: if the fee is not valid
+        :raises KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
+        :raises KinErrors.AccountExistsError: if the account already exists.
+        :raises KinErrors.NotValidParamError: if the memo is longer than MEMO_CAP characters
+        :raises KinErrors.NotValidParamError: if the amount is too precise
+        :raises KinErrors.NotValidParamError: if the fee is not valid
         """
         builder = self.build_create_account(address, starting_balance, fee, memo_text)
 
@@ -161,11 +165,11 @@ class KinAccount:
             return self.submit_transaction(builder)
 
     def send_kin(self, address, amount, fee, memo_text=None):
-        """Send KIN to the account identified by the provided address.
+        """Send Kin to the account identified by the provided address.
 
-        :param str address: the account to send KIN to.
+        :param str address: the account to send Kin to.
 
-        :param float|str amount: the amount of KIN to send.
+        :param float|str amount: the amount of Kin to send.
 
         :param str memo_text: (optional) a text to put into transaction memo.
 
@@ -174,13 +178,13 @@ class KinAccount:
         :return: the hash of the transaction
         :rtype: str
 
-        :raises: KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
-        :raises: ValueError: if the amount is not positive.
-        :raises: KinErrors.NotValidParamError: if the amount is too precise
-        :raises: KinErrors.AccountNotFoundError if the account does not exist.
-        :raises: KinErrors.LowBalanceError if there is not enough KIN to send and pay transaction fee.
-        :raises: KinErrors.NotValidParamError if the memo is longer than MEMO_CAP characters
-        :raises: KinErrors.NotValidParamError: if the fee is not valid
+        :raises KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
+        :raises ValueError: if the amount is not positive.
+        :raises KinErrors.NotValidParamError: if the amount is too precise
+        :raises KinErrors.AccountNotFoundError: if the account does not exist.
+        :raises KinErrors.LowBalanceError: if there is not enough Kin to send and pay transaction fee.
+        :raises KinErrors.NotValidParamError: if the memo is longer than MEMO_CAP characters
+        :raises KinErrors.NotValidParamError: if the fee is not valid
         """
         builder = self.build_send_kin(address, amount, fee, memo_text)
         with self.channel_manager.get_channel() as channel:
@@ -196,16 +200,16 @@ class KinAccount:
 
         :param str address: the address of the account to create.
 
-        :param float|str starting_balance: the starting XLM balance of the account.
+        :param float|str starting_balance: the starting Kin balance of the account.
 
         :param str memo_text: (optional) a text to put into transaction memo, up to MEMO_CAP chars.
 
         :param int fee: fee to be deducted for the tx
 
         :return: a transaction builder object
-        :rtype: kin.Builder
+        :rtype: :class:`kin.Builder`
 
-        :raises: KinErrors.StellarAddressInvalidError: if the supplied address has a wrong format.
+        :raises KinErrors.StellarAddressInvalidError: if the supplied address has a wrong format.
         """
         if not is_valid_address(address):
             raise KinErrors.StellarAddressInvalidError('invalid address: {}'.format(address))
@@ -220,21 +224,21 @@ class KinAccount:
         return builder
 
     def build_send_kin(self, address, amount, fee, memo_text=None):
-        """Build a tx to send KIN to the account identified by the provided address.
+        """Build a tx to send Kin to the account identified by the provided address.
 
         :param str address: the account to send asset to.
 
-        :param float|str amount: the KIN amount to send.
+        :param float|str amount: the Kin amount to send.
 
         :param str memo_text: (optional) a text to put into transaction memo.
 
         :param int fee: fee to be deducted for the tx
 
         :return: a transaction builder
-        :rtype: kin.Builder
+        :rtype: :class:`kin.Builder`
 
-        :raises: KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
-        :raises: ValueError: if the amount is not positive.
+        :raises KinErrors.StellarAddressInvalidError: if the provided address has a wrong format.
+        :raises ValueError: if the amount is not positive.
         """
 
         if not is_valid_address(address):
@@ -251,13 +255,14 @@ class KinAccount:
     def submit_transaction(self, tx_builder):
         """
         Submit a transaction to the blockchain.
+
         :param kin.Builder tx_builder: The transaction builder
         :return: The hash of the transaction.
         :rtype: str
         """
         try:
             return tx_builder.submit()['hash']
-        # If the channel is out of KIN, top it up and try again
+        # If the channel is out of Kin, top it up and try again
         except HorizonError as e:
             logger.warning('send transaction error with channel {}: {}'.format(tx_builder.address, str(e)))
             if e.type == HorizonErrorType.TRANSACTION_FAILED \
@@ -274,23 +279,25 @@ class KinAccount:
                 raise KinErrors.translate_error(e)
 
     def monitor_payments(self, callback_fn):
-        """Monitor KIN payment transactions related to this account
-        NOTE: the function starts a background thread.
+        """Monitor Kin payment transactions related to this account
+
+        **Note:**  The function starts a background thread.
 
         :param callback_fn: the function to call on each received payment as `callback_fn(address, tx_data, monitor)`.
-        :type: callable[str,kin.transactions.SimplifiedTransaction,kin.monitors.SingleMonitor]
+        :type: callable[str, :class:`kin.transactions.SimplifiedTransaction` , :class:`kin.monitors.SingleMonitor` ]
 
         :return: a monitor instance
-        :rtype: kin.monitors.SingleMonitor
+        :rtype: :class:`kin.monitors.SingleMonitor`
         """
         return self._client.monitor_account_payments(self.keypair.public_address, callback_fn)
 
     def whitelist_transaction(self, payload):
         """
         Sign on a transaction to whitelist it
+
         :param str payload: the json received from the client
         :return: a signed transaction encoded as base64
-        :rtype str
+        :rtype: str
         """
 
         # load the object from the json
@@ -327,6 +334,7 @@ class KinAccount:
     def _top_up(self, address):
         """
         Top up a channel with the base account.
+
         :param str address: The address to top up
         """
         # In theory, if the sdk runs in threads, and 2 or more channels

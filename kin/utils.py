@@ -11,13 +11,14 @@ from .errors import AccountNotFoundError
 def create_channels(master_seed, environment, amount, starting_balance, salt):
     """
     Create HD seeds based on a master seed and salt
+
     :param str master_seed: The master seed that creates the seeds
     :param Kin.Environment environment: The blockchain environment to create the seeds on
     :param int amount: Number of seeds to create (Up to 100)
     :param float starting_balance: Starting balance to create channels with
     :param str salt: A string to be used to create the HD seeds
     :return: The list of seeds generated
-    :rtype list[str]
+    :rtype: list[str]
     """
 
     client = KinClient(environment)
@@ -59,11 +60,12 @@ def create_channels(master_seed, environment, amount, starting_balance, salt):
 def get_hd_channels(master_seed, salt, amount):
     """
     Get a list of channels generated based on a seed and salt
+
     :param str master_seed: the base seed that created the channels
     :param str salt: A string to be used to generate the seeds
     :param int amount: Number of seeds to generate (Up to 100)
     :return: The list of seeds generated
-    :rtype list[str]
+    :rtype: list[str]
     """
 
     if amount > 100:
@@ -82,7 +84,3 @@ def get_hd_channels(master_seed, salt, amount):
         channels.append(channel)
 
     return channels
-
-
-
-

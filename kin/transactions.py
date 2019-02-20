@@ -48,7 +48,7 @@ class SimplifiedOperation:
 
     def __init__(self, op_data):
         if isinstance(op_data, Payment):
-            # Raise error if its not a KIN payment
+            # Raise error if its not a Kin payment
             if op_data.asset.type != NATIVE_ASSET_TYPE:
                 raise CantSimplifyError('Cant simplify operation with asset {} issued by {}'.
                                         format(op_data.asset.code, op_data.asset.issuer))
@@ -87,6 +87,7 @@ class OperationTypes(Enum):
 def build_memo(app_id, memo):
     """
     Build a memo for a tx that fits the pre-defined template
+
     :param str app_id: The app_id to include in the memo
     :param str memo: The memo to include
     :return: the finished memo
@@ -102,12 +103,13 @@ def build_memo(app_id, memo):
 def decode_transaction(b64_tx, network_id, simple=True):
     """
     Decode a base64 transaction envelop
+
     :param str b64_tx: a transaction envelop encoded in base64
     :param boolean simple: should the tx be simplified
     :param str network_id: the network_id for the transaction
     :return: The transaction
-    :rtype kin.transactions.SimplifiedTransaction | kin_base.Transaction
-    :raises: KinErrors.CantSimplifyError: if the tx cannot be simplified
+    :rtype: :class:`kin.transactions.SimplifiedTransaction` | :class:`kin_base.Transaction`
+    :raises KinErrors.CantSimplifyError: if the tx cannot be simplified
     """
     unpacker = Xdr.StellarXDRUnpacker(base64.b64decode(b64_tx))
     envelop = unpacker.unpack_TransactionEnvelope()
@@ -129,12 +131,15 @@ def calculate_tx_hash(tx, network_passphrase_hash):
     Calculate a tx hash.
 
     A tx hash is a sha256 hash of:
+
     1. A sha256 hash of the network_id +
     2. The xdr representation of ENVELOP_TYPE_TX +
     3. The xdr representation of the transaction
+
     :param tx: The builder's transaction object
     :param network_passphrase_hash: The network passphrase hash
-    :return:
+    :return: sha256 hash (hex)
+    :rtype: str
     """
     # Pack the transaction to xdr
     packer = Xdr.StellarXDRPacker()

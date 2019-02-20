@@ -15,6 +15,7 @@ class Builder(BaseBuilder):
     def __init__(self, network_name, horizon, fee, secret):
         """
         Create a new transaction builder
+
         :param str network_name: The name of the network
         :param kin.Horizon horizon: The horizon instance to use
         :param int fee: Fee for the transaction
@@ -31,7 +32,7 @@ class Builder(BaseBuilder):
         self.horizon = horizon
 
     def clear(self):
-        """"Clears the builder so it can be reused."""
+        """Clears the builder so it can be reused."""
         self.ops = []
         self.time_bounds = None
         self.memo = NoneMemo()
@@ -60,6 +61,7 @@ class Builder(BaseBuilder):
     def set_channel(self, channel_seed):
         """
         Set a channel to be used for this transaction
+
         :param str channel_seed: Seed to use as the channel
         """
         self.keypair = Keypair.from_seed(channel_seed)

@@ -19,16 +19,17 @@ logger = logging.getLogger(__name__)
 
 class KinClient(object):
     """
-    The :class:`kin.KinClient` class is the primary interface to the KIN Python SDK based on Kin Blockchain.
+    The :class:`kin.KinClient` class is the primary interface to the Kin Python SDK based on Kin Blockchain.
     It maintains a connection context with a Horizon node and hides all the specifics of dealing with Kin REST API.
     """
 
     def __init__(self, environment):
-        """Create a new instance of the KinClient to query the Kin blockchain.
+        """Create a new instance of the KinClient to query the Kin Blockchain.
+
         :param kin.Environment environment: an environment for the client to point to.
 
         :return: An instance of the KinClient.
-        :rtype: KinErrors.KinClient
+        :rtype: :class:`KinErrors.KinClient`
         """
 
         self.environment = environment
@@ -40,13 +41,14 @@ class KinClient(object):
     def kin_account(self, seed, channel_secret_keys=None, app_id=ANON_APP_ID):
         """
         Create a new instance of a KinAccount to perform authenticated operations on the blockchain.
+
         :param str seed: The secret seed of the account that will be used
         :param list[str] channel_secret_keys: A list of seeds to be used as channels
         :param str app_id: the unique id of your app
         :return: An instance of KinAccount
-        :rtype: kin.KinAccount
+        :rtype: :class:`kin.KinAccount`
 
-        :raises: KinErrors.AccountNotFoundError if SDK wallet or channel account is not yet created.
+        :raises KinErrors.AccountNotFoundError: if SDK wallet or channel account is not yet created.
         """
 
         # Create a new kin account, using self as the KinClient to be used
@@ -54,6 +56,7 @@ class KinClient(object):
 
     def get_config(self):
         """Get system configuration data and online status.
+
         :return: a dictionary containing the data
         :rtype: dict
         """
@@ -86,6 +89,7 @@ class KinClient(object):
     def get_minimum_fee(self):
         """
         Get the current minimum fee acceptable for a tx
+
         :return: The minimum fee
         :type: int
         """
@@ -95,13 +99,14 @@ class KinClient(object):
 
     def get_account_balance(self, address):
         """
-        Get the KIN balance of a given account
+        Get the Kin balance of a given account
+
         :param str address: the public address of the account to query
         :return: the balance of the account
         :rtype: float
 
-        :raises: StellarAddressInvalidError: if the provided address has the wrong format.
-        :raises: KinErrors.AccountNotFoundError if the account does not exist.
+        :raises StellarAddressInvalidError: if the provided address has the wrong format.
+        :raises KinErrors.AccountNotFoundError: if the account does not exist.
         """
 
         if not is_valid_address(address):
@@ -115,11 +120,12 @@ class KinClient(object):
     def does_account_exists(self, address):
         """
         Find out if a given account exists on the blockchain
+
         :param str address: The kin account to query about
         :return: does the account exists on the blockchain
-        :rtype boolean
+        :rtype: boolean
 
-        :raises: KinErrors.StellarAddressInvalidError if the address is not valid.
+        :raises KinErrors.StellarAddressInvalidError: if the address is not valid.
         """
 
         if not is_valid_address(address):
@@ -137,10 +143,10 @@ class KinClient(object):
         :param str address: the public address of the account to query.
 
         :return: account data
-        :rtype: kin.blockchain.horizon_models.AccountData
+        :rtype: :class:`kin.blockchain.horizon_models.AccountData`
 
-        :raises: StellarAddressInvalidError: if the provided address has a wrong format.
-        :raises: :class:`KinErrors.AccountNotFoundError`: if the account does not exist.
+        :raises StellarAddressInvalidError: if the provided address has a wrong format.
+        :raises KinErrors.AccountNotFoundError: if the account does not exist.
         """
         # TODO: might want to simplify the returning data
         if not is_valid_address(address):
@@ -161,11 +167,11 @@ class KinClient(object):
         :param boolean simple: (optional) returns a simplified transaction object
 
         :return: transaction data
-        :rtype: kin.transactions.RawTransaction | kin.transactions.SimplifiedTransaction
+        :rtype: :class:`kin.transactions.RawTransaction` | :class:`kin.transactions.SimplifiedTransaction`
 
-        :raises: ValueError: if the provided hash is invalid.
-        :raises: :class:`KinErrors.ResourceNotFoundError`: if the transaction does not exist.
-        :raises: :class:`KinErrors.CantSimplifyError`: if the tx is too complex to simplify
+        :raises ValueError: if the provided hash is invalid.
+        :raises KinErrors.ResourceNotFoundError: if the transaction does not exist.
+        :raises KinErrors.CantSimplifyError: if the tx is too complex to simplify
         """
         # TODO: separate to two methods, get_tx_data & get_raw_tx_data
         if not is_valid_transaction_hash(tx_hash):
@@ -183,13 +189,14 @@ class KinClient(object):
     def get_account_tx_history(self, address, amount=10, descending=True, cursor=None, simple=True):
         """
         Get the transaction history for a given account.
+
         :param str address: The public address of the account to query
         :param int amount: The maximum number of transactions to get
-        :param bool descending: The order of the transactions, True will start from the latest one
+        :param bool descending: The order of the transactions. If True, will start from the latest one
         :param int cursor: The horizon paging token
-        :param bool simple: Should the returned txs be simplified, if True, complicated txs will be ignored
+        :param bool simple: Should the returned txs be simplified. If True, complicated txs will be ignored
         :return: A list of transactions
-        :rtype: list[kin.transactions.RawTransaction | kin.transactions.SimplifiedTransaction]
+        :rtype: list[ :class:`kin.transactions.RawTransaction` | :class:`kin.transactions.SimplifiedTransaction`]
         """
 
         if not is_valid_address(address):
@@ -234,6 +241,7 @@ class KinClient(object):
     def verify_kin_payment(self, tx_hash, source, destination, amount, memo=None, check_memo=False, app_id=ANON_APP_ID):
         """
         Verify that a give tx matches the desired parameters
+
         :param str tx_hash: The hash of the transaction to query
         :param str source: The expected source account
         :param str destination: The expected destination account
@@ -263,15 +271,16 @@ class KinClient(object):
     def friendbot(self, address):
         """
         Use the friendbot service to create and fund an account
+
         :param str address: The address to create and fund
 
         :return: the hash of the friendbot transaction
-        :rtype str
+        :rtype: str
 
         :raises ValueError: if no friendbot service was provided
         :raises ValueError: if the address is invalid
-        :raises KinErrors.AccountExistsError if the account already exists
-        :raises KinErrors.FriendbotError If the friendbot request failed
+        :raises KinErrors.AccountExistsError: if the account already exists
+        :raises KinErrors.FriendbotError: If the friendbot request failed
         """
 
         if self.environment.friendbot_url is None:
@@ -289,39 +298,41 @@ class KinClient(object):
             raise KinErrors.FriendbotError(response.status_code, response.text)
 
     def monitor_account_payments(self, address, callback_fn):
-        """Monitor KIN payment transactions related to the account identified by provided address.
-        NOTE: the function starts a background thread.
+        """Monitor Kin payment transactions related to the account identified by provided address.
+
+        **Note:**  The function starts a background thread.
 
         :param str address: the address of the account to query.
 
         :param callback_fn: the function to call on each received payment as `callback_fn(address, tx_data, monitor)`.
-        :type: callable[str,kin.transactions.SimplifiedTransaction, kin.SingleMonitor]
+        :type: callable[str, :class:`kin.transactions.SimplifiedTransaction`, :class:`kin.monitors.SingleMonitor` ]
 
         :return: a monitor instance
-        :rtype: kin.monitors.SingleMonitor
+        :rtype: :class:`kin.monitors.SingleMonitor`
 
-        :raises: ValueError: when no address is given.
-        :raises: ValueError: if the address is in the wrong format
-        :raises: KinErrors.AccountNotActivatedError if the account given is not activated
+        :raises ValueError: when no address is given.
+        :raises ValueError: if the address is in the wrong format
+        :raises KinErrors.AccountNotActivatedError: if the account given is not activated
         """
 
         return SingleMonitor(self, address, callback_fn)
 
     def monitor_accounts_payments(self, addresses, callback_fn):
-        """Monitor KIN payment transactions related to multiple accounts
-        NOTE: the function starts a background thread.
+        """Monitor Kin payment transactions related to multiple accounts
+
+        **Note:**  The function starts a background thread.
 
         :param str addresses: the addresses of the accounts to query.
 
         :param callback_fn: the function to call on each received payment as `callback_fn(address, tx_data, monitor)`.
-        :type: callable[str,kin.transactions.SimplifiedTransaction ,kin.monitors.MultiMonitor]
+        :type: callable[str, :class:`kin.transactions.SimplifiedTransaction` , :class:`kin.monitors.MultiMonitor` ]
 
         :return: a monitor instance
-        :rtype: kin.monitors.MultiMonitor
+        :rtype: :class:`kin.monitors.MultiMonitor`
 
-        :raises: ValueError: when no address is given.
-        :raises: ValueError: if the addresses are in the wrong format
-        :raises: KinErrors.AccountNotActivatedError if the accounts given are not activated
+        :raises ValueError: when no address is given.
+        :raises ValueError: if the addresses are in the wrong format
+        :raises KinErrors.AccountNotActivatedError: if the accounts given are not activated
         """
 
         return MultiMonitor(self, addresses, callback_fn)

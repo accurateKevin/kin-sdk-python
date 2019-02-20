@@ -16,10 +16,11 @@ class SingleMonitor:
     def __init__(self, kin_client, address, callback_fn):
         """
         Monitors a single account for kin payments
+
         :param kin.KinClient kin_client: a kin client directed to the correct network
         :param str address: address to watch
         :param callback_fn: the function to call on each received payment as `callback_fn(address, tx_data, monitor)`.
-        :type: callable[str,kin.transactions.SimplifiedTransaction ,kin.monitors.MultiMonitor]
+        :type: callable[str, :class:`kin.transactions.SimplifiedTransaction` , :class:`kin.monitors.MultiMonitor`]
         """
         self.kin_client = kin_client
         self.callback_fn = callback_fn
@@ -58,6 +59,7 @@ class SingleMonitor:
     def event_processor(self, stop_event):
         """
         Method to filter through SSE events and find kin payments for an account
+
         :param threading.Event stop_event: an event that can be used to stop this method
         """
         import json
@@ -104,15 +106,16 @@ class SingleMonitor:
 
 
 class MultiMonitor:
-    """Multi Monitor to monitor Kin payment on a multiple accounts"""
+    """Multi Monitor to monitor Kin payment on multiple accounts"""
 
     def __init__(self, kin_client, addresses, callback_fn):
         """
         Monitors multiple accounts for kin payments
+
         :param kin.KinClient kin_client: a kin client directed to the correct network
         :param str addresses: addresses to watch
         :param callback_fn: the function to call on each received payment as `callback_fn(address, tx_data, monitor)`.
-        :type: callable[str,kin.transactions.SimplifiedTransaction ,kin.monitors.MultiMonitor]
+        :type: callable[str, :class:`kin.transactions.SimplifiedTransaction` , :class:`kin.monitors.MultiMonitor`]
         """
         self.kin_client = kin_client
         self.callback_fn = callback_fn
@@ -150,6 +153,7 @@ class MultiMonitor:
     def event_processor(self, stop_event):
         """
         Method to filter through SSE events and find kin payments for an account
+
         :param threading.Event stop_event: an event that can be used to stop this method
         """
         import json
@@ -200,6 +204,7 @@ class MultiMonitor:
     def add_address(self, address):
         """
         Add address to the watched addresses list
+
         :param address: address to add
         """
         if address in self.addresses:
@@ -219,6 +224,7 @@ class MultiMonitor:
     def remove_address(self, address):
         """
         Remove an address for the list of addresses to watch
+
         :param address: the address to remove
         """
         if self.stop_event.is_set():
