@@ -1,0 +1,19 @@
+{#
+    basic/localtoc.html
+    ~~~~~~~~~~~~~~~~~~~
+
+    Sphinx sidebar template: local table of contents.
+
+    :copyright: Copyright 2007-2019 by the Sphinx team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+#}
+
+<a href="https://kinecosystem.github.io/kin-website-docs/">
+  <img src="_images/kin-sidebar-header.png" alt="kin logo">
+</a>
+
+
+{%- if display_toc %}
+  <h3><a href="{{ pathto(master_doc) }}">{{ _('Python API Reference') }}</a></h3>
+  {{ toc }}
+{%- endif %}
